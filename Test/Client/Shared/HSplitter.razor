@@ -1,0 +1,24 @@
+﻿@inject IJSRuntime JS
+
+<div id="@($"{UID}split-container")" style="display:flex; flex-direction:column;height:100%;" @ref="@container">
+    <div id="@($"{UID}top-section")" style="flex-grow:1; overflow:auto;">
+        @Top
+    </div>
+    <div id="@($"{UID}splitter")" @onmousedown="(e) => middleMouseDown(e)"
+        style="height:6px; background-color:#ccc; cursor:row-resize;">
+    </div>
+    <div id="@($"{UID}bottom-section")" style="flex-grow:1; overflow:auto;">
+        @Bottom
+    </div>
+</div>
+
+@code {
+    [Parameter] public RenderFragment? Top { set; get; }
+    [Parameter] public RenderFragment? Bottom { set; get; }
+    string UID = $"splitter-{Guid.NewGuid().ToString("N")}";
+    ElementReference container;
+    void middleMouseDown(object e)
+    {
+        JS.InvokeVoidAsync("bsplitter.mouseDownEventHandler", UID, e, container, true);
+    }
+}
