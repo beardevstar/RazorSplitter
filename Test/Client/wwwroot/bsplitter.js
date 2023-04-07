@@ -7,7 +7,7 @@ $(function () {
     const BOTTOM_ID = 'bottom-section';
     const SPLITTER_ID = 'splitter';
 
-    var startPos = 0, startValue = 0;
+    var startPos = 0, startValue = 0, totalValue = 0;
     var container = {};
     var prefix = "";
 
@@ -27,6 +27,7 @@ $(function () {
 
         startPos = e.pageX;
         startValue = $(left).width();
+        totalValue = $(container).width();
 
         $(document).mousemove(WidthResize);
         $(document).mouseup(stopResize);
@@ -38,8 +39,11 @@ $(function () {
         var right = $(container).find("#" + prefix + RIGHT_ID)[0];
         var middle = $(container).find("#" + prefix + SPLITTER_ID)[0];
 
+        var rightW = totalValue - newWidth - $(middle).width();
+        if (rightW < 0 || newWidth < 0) return;
+
         $(left).width(newWidth);
-        $(right).width($(container).width() - newWidth - $(middle).width());
+        $(right).width(rightW);
     }
 
     function HorizontalSplitterPressed(e) {
@@ -47,7 +51,8 @@ $(function () {
 
         startPos = e.pageY;
         startValue = $(top).height();
-        
+        totalValue = $(container).height();
+
         $(document).mousemove(HeightResize);
         $(document).mouseup(stopResize);
     }
@@ -57,8 +62,11 @@ $(function () {
         var bottom = $(container).find("#" + prefix + BOTTOM_ID)[0];
         var middle = $(container).find("#" + prefix + SPLITTER_ID)[0];
 
+        var bottomH = totalValue - newHeight - $(middle).height();
+        if (bottomH < 0 || newHeight < 0) return;
+
         $(top).height(newHeight);
-        $(bottom).height($(container).height() - newHeight - $(middle).height());
+        $(bottom).height(bottomH);
     }
 
     function stopResize() {
